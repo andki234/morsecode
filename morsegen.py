@@ -225,7 +225,7 @@ def add_external_noise(audio_signal, noise_file_path, noise_level=0.5):
     return audio_signal_with_external_noise
 
 # Function to generate and save WAV file for a single Morse code character
-def generate_and_save_wav(key, takt, tone, frequency, volume, sample_rate):
+def generate_and_save_wav(key, takt, tone, volume, sample_rate):
     try:
         audio_data = generate_audio_morse_code(key, swe_takt=takt, frequency=tone, volume=volume, sample_rate=sample_rate)
         audio_data = generate_audio_morse_code(key, swe_takt=takt, frequency=tone, volume=volume, sample_rate=sample_rate, add_space_between_elements=True)
@@ -237,12 +237,12 @@ def generate_and_save_wav(key, takt, tone, frequency, volume, sample_rate):
         print(f"Error generating WAV file for character '{key}': {e}")
 
 # Modified function for generating WAV files using threading
-def gen_dictonary_wav_files_threaded(swe_takt=100, frequency=800, volume=0.5, sample_rate=22050):
+def gen_dictonary_wav_files_threaded(volume=0.5, sample_rate=22050):
     threads = []
     for key, value in morsecodedict.items():
         for takt in range(20, 151, 5):
             for tone in range(550, 851, 5):
-                thread = threading.Thread(target=generate_and_save_wav, args=(key, takt, tone, frequency, volume, sample_rate))
+                thread = threading.Thread(target=generate_and_save_wav, args=(key, takt, tone, volume, sample_rate))
                 threads.append(thread)
                 thread.start()
     for thread in threads:
@@ -255,10 +255,14 @@ def delete_wav_files(folder_path):
         if file_path.endswith(".wav"):
             os.remove(file_path)
 
+def generat_test_wav_files():
+    generate_and_save_wav('a', 93, 801, 0.5, 22050)
+    generate_and_save_wav('a', 91, 802, 0.5, 22050)
+
 # Main function
 def main():
     delete_wav_files("training_data")
     gen_dictonary_wav_files_threaded()
 
 if __name__ == "__main__":
-    main()
+    generat_test_wav_files()
